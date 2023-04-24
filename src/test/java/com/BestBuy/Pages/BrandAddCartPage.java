@@ -32,27 +32,31 @@ public class BrandAddCartPage extends BaseTestEcom{
 		waitForElement(apple);
 		clickAction(apple);
 	}
-	@FindBy(linkText="Apple Watch")
-	WebElement watch;
-	public void clickAppleWatch() {
-		waitForElement(watch);
-		clickAction(watch);
+	@FindBy(linkText="AirPods")
+	WebElement airpod;
+	public void clickAirPods() {
+		waitForElement(airpod);
+		clickAction(airpod);
 	}
-	@FindBy(linkText="Apple Watch Series 8 GPS") 
-	WebElement watchGPS;
-	public void clickWatchGPS() {
-		waitForElement(watchGPS);
-		clickAction(watchGPS);
+	@FindBy(linkText="EarPods") 
+	WebElement ear;
+	public void clickEarPods() {
+		waitForElement(ear);
+		clickAction(ear);
 	}
 	@FindBy(xpath="//button[text()='Add to Cart']")
-	
 	WebElement cart;
 	public void clickAddToCart() {
 		waitForElement(cart);
 		//clickAction(cart);
-		jsScrollUntillFound(cart);
+		//jsScrollUntillFound(cart);
 		jsWebElementClick(cart);
 	}
-	
+	@FindBy(linkText="Go to Cart")
+	WebElement goCart;
+	public void goToCart() {
+		waitForElement(goCart);
+		clickAction(goCart);
+	}
 
 }

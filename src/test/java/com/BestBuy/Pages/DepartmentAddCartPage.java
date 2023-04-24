@@ -29,7 +29,7 @@ public class DepartmentAddCartPage extends BaseTestEcom {
 		clickAction(appliances);
 	}
 
-	@FindBy(xpath = "//button[text()='Major Kitchen Appliances']")
+	@FindBy(xpath = "//button[text()='Small Kitchen Appliances']")
 	WebElement kitchen;
 
 	public void clickKitchenAppliances() {
@@ -37,31 +37,31 @@ public class DepartmentAddCartPage extends BaseTestEcom {
 		clickAction(kitchen);
 	}
 
-	@FindBy(linkText = "Refrigerators")
-	WebElement fridge;
+	@FindBy(linkText = "Bar & Wine")
+	WebElement bar;
 
-	public void clickRefridgerators() {
-		waitForElement(fridge);
-		clickAction(fridge);
+	public void clickBarWine() {
+		waitForElement(bar);
+		clickAction(bar);
 	}
-	@FindBy(linkText="4-door refrigerators")
-	WebElement fourDoorFridge;
-	public void clickFourDoorFridge() {
-		waitForElement(fourDoorFridge);
-		clickAction(fourDoorFridge);
-	}
-	@FindBy(xpath="(//img[@class='product-image'])[2]")
-	WebElement frenchDoor;
-	public void clickFrenchDoor() {
-		waitForElement(frenchDoor);
-		clickAction(frenchDoor);
+	@FindBy(partialLinkText="NutriBullet - Brew Choice")
+	WebElement Brew;
+	public void clickNutriBullet() {
+		waitForElement(Brew);
+		clickAction(Brew);
 	}
 	@FindBy(xpath="//button[text()='Add to Cart']")
 	WebElement cart;
 	public void clickAddToCart() {
 		waitForElement(cart);
-		jsScrollUntillFound(cart);
+		//jsScrollUntillFound(cart);
 		//clickAction(cart);
 		jsWebElementClick(cart);
+	}
+	@FindBy(linkText="Go to Cart")
+	WebElement goCart;
+	public void goToCart() {
+		waitForElement(goCart);
+		clickAction(goCart);
 	}
 }

@@ -1,5 +1,7 @@
 package com.BestBuy.Utils;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,6 +26,9 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
+import org.testng.Assert;
+
+import com.BestBuy.Utils.Reports;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -37,28 +42,19 @@ public class BaseTestEcom {
 			driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 			driver.get(url);
+			Reports.reportStep("PASS", " Browser Launched Successfully with this : "+url);
 		}
 
 		catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while launching Broswer with this : "+url);
 			System.out.println("Problem while launching the browser");
 			ex.printStackTrace();
 
 		}
 	}
-	public void Brokenlink() {
+	public void Brokenlink(String url) {
 		
 		//1.Write code to open a web browser and navigate to the Best Buy e-commerce website (https://www.bestbuy.com/).
-
-		 WebElement link = driver.findElement(By.tagName("a"));
-
-			String url = link.getAttribute("href");
-
-			if (url == null || url.isEmpty()) {
-
-				System.out.println("Invalid url");
-
-			}
 
 			try {
 				HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
@@ -66,23 +62,34 @@ public class BaseTestEcom {
 				int respCode = httpConnection.getResponseCode();
 
 				if (respCode >= 400) {
-					System.out.println(url + " is broken and its responsecode is " + respCode);
-				} else
-					System.out.println(url + " is Valid and its responsecode is " + respCode);
-
+					System.out.println(url + " is broken and its responsecode is : " + respCode);
+					Reports.reportStep("PASS", "This"+url+ "is verified as broken link");
+				} else {
+					System.out.println(url + " is Valid and its responsecode is : " + respCode);
+					Reports.reportStep("PASS", "This"+url+ "is verified as Valid link");
+				}
 			} catch (Exception ex) {
+				Reports.reportStep("FAIL", "Problem while verifying the "+url+" as Broken link");
 				ex.printStackTrace();
 			}
 		}
 
-
+public void validateTitle(String title) {
+	try {
+	Assert.assertEquals(driver.getTitle(), title);
+	Reports.reportStep("PASS", "This "+title+" has been verified successfully");
+	}catch (Exception ex) {
+		Reports.reportStep("FAIL", "Problem while verifying the : "+title);
+		ex.printStackTrace();
+	}
+}
 
 	public void quitBrowser() {
 		try {
 			driver.quit();
-
+			Reports.reportStep("PASS", " All Browser has been closed successfully ");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", " Problem while closing All the Browsers ");
 			ex.printStackTrace();
 		}
 	}
@@ -90,11 +97,11 @@ public class BaseTestEcom {
 	public void closeBrowser() {
 		try {
 			driver.close();
-
+			Reports.reportStep("PASS", " Current/Active Browser has been closed successfully ");
 		}
 
 		catch (Exception ex) {
-
+			Reports.reportStep("PASS", " Problem while closing the Active/Current browser window ");
 			ex.printStackTrace();
 		}
 	}
@@ -103,9 +110,9 @@ public class BaseTestEcom {
 		try {
 			ele.clear();
 			ele.sendKeys(text);
-
+			Reports.reportStep("PASS", "The "+text+" was entered succesfully to the "+ele);
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "The "+text+" was not entered to the "+ele);
 			ex.printStackTrace();
 		}
 	}
@@ -113,9 +120,9 @@ public class BaseTestEcom {
 	public void clickAction(WebElement ele) {
 		try {
 			ele.click();
-
+			Reports.reportStep("PASS", "The "+ele+" was clicked succesfully");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "The "+ele+" wasn't clicked");
 			ex.printStackTrace();
 		}
 	}
@@ -126,9 +133,9 @@ public class BaseTestEcom {
 			wait.until(ExpectedConditions.visibilityOf(ele));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
 			// wait.until(ExpectedConditions.)
-
+			Reports.reportStep("PASS", "The "+ele+" waits until expected conditions element");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while waiting for the "+ele);
 			ex.printStackTrace();
 		}
 
@@ -139,35 +146,22 @@ public class BaseTestEcom {
 			WebDriverWait wait = new WebDriverWait(driver, timeOut);
 			wait.until(ExpectedConditions.visibilityOf(ele));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-
+			Reports.reportStep("PASS", "The "+ele+" waited successfully to meet the expected conditions for "+timeOut);
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while waiting for the "+ele+" with "+timeOut);
 			ex.printStackTrace();
 		}
 
 	}
 
-	public void pollingWait(WebElement ele) {
-		try {
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
-					.pollingEvery(Duration.ofSeconds(2));
-			wait.until(ExpectedConditions.visibilityOf(ele));
-			wait.until((ExpectedConditions.elementToBeClickable(ele)));
-
-		} catch (Exception ex) {
-
-			ex.printStackTrace();
-		}
-
-	}
 
 	public void DropDownByValue(WebElement ele, String value) {
 		try {
 			Select sel = new Select(ele);
 			sel.selectByValue(value);
-
+			Reports.reportStep("PASS", "Selected the given "+value+" from the dropdown");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while selecting the given "+value+" from the dropdown");
 			ex.printStackTrace();
 		}
 
@@ -177,9 +171,9 @@ public class BaseTestEcom {
 		try {
 			Select sel = new Select(ele);
 			sel.selectByIndex(index);
-
+			Reports.reportStep("PASS", "Selected the given "+index+" from the dropdown");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while selecting the given "+index+" from the dropdown");
 			ex.printStackTrace();
 		}
 
@@ -189,9 +183,9 @@ public class BaseTestEcom {
 		try {
 			Select sel = new Select(ele);
 			sel.selectByVisibleText(VisibleText);
-
+			Reports.reportStep("PASS", "Selected the given "+VisibleText+" from the dropdown");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while selecting the given "+VisibleText+" from the dropdown");
 			ex.printStackTrace();
 		}
 	}
@@ -200,9 +194,9 @@ public class BaseTestEcom {
 		try {
 			Alert alert = driver.switchTo().alert();
 			alert.accept();
-
+			Reports.reportStep("PASS", "Successfully accepted the alert");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while accepting the alert");
 			ex.printStackTrace();
 		}
 	}
@@ -211,100 +205,86 @@ public class BaseTestEcom {
 		try {
 			Alert alert = driver.switchTo().alert();
 			alert.dismiss();
-
+			Reports.reportStep("PASS", "Successfully dismiss the alert");
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while dismiss the alert");
 			ex.printStackTrace();
 		}
 	}
+//Move to element
 
 	public void moveTo(WebElement ele) {
 		try {
 			Actions act = new Actions(driver);
 			act.moveToElement(ele).build().perform();
-
+			Reports.reportStep("PASS", "The "+ele+" was movoTo element succesfully");
 		} catch (Exception ex) {
-
+			Reports.reportStep("PASS", "The "+ele+" wasn't moveTo  element");
 			ex.printStackTrace();
 		}
 	}
-
+//Right click
+	
 	public void rightClick(WebElement ele) {
 		try {
 
 			Actions act = new Actions(driver);
 			act.moveToElement(ele).contextClick().build().perform();
-
+			Reports.reportStep("PASS", "The "+ele+" rightclicked on the webelement successfully");
 		} catch (Exception ex) {
+			Reports.reportStep("FAIL", "Problem while "+ele+ " rightclicking on the webelement ");
+			ex.printStackTrace();
+		}
+	}
+	
 
+	// draganddrop
+	
+	public void dragAndDrop(WebElement source, WebElement target) {
+		try {
+			Actions act = new Actions(driver);
+			act.dragAndDrop(source, target).build().perform();
+			Reports.reportStep("PASS", "Successfully dismiss the alert");
+		} catch (Exception ex) {
+			Reports.reportStep("FAIL", "Problem while moving the element from "+source+" to "+target);
 			ex.printStackTrace();
 		}
 	}
 
-	// isEnabled
-	public boolean verifyEnabled(WebElement ele) {
-		boolean retVal = false;
+	// doubleclick
+	
+	public void doubeclick(WebElement ele) {
 		try {
-			if (ele.isEnabled()) {
-				System.out.println("Pass : Element is enabled");
-				retVal = true;
-
-			} else {
-				System.out.println("Fail : Element is not enabled");
-
-			}
-		} catch (Exception e) {
-
-			e.printStackTrace();
+			Actions act = new Actions(driver);
+			act.doubleClick(ele).build().perform();
+			Reports.reportStep("PASS", "The "+ele+" has been doubleclicked succesfully");
+		} catch (Exception ex) {
+			Reports.reportStep("FAIL", "The "+ele+" wasn't doubleclicked");
+			ex.printStackTrace();
 		}
-		return retVal;
 	}
 
-	public boolean verifyDisplayed(WebElement ele) {
-		boolean retVal = false;
-
+	// clickAndHold
+	
+	public void clickandHold(WebElement source, WebElement target) {
 		try {
-			if (ele.isDisplayed()) {
-				System.out.println("Pass : Element is Displayed");
-				retVal = true;
-
-			} else {
-				System.out.println("Fail : Element is Displayed");
-
-			}
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
+			Actions act = new Actions(driver);
+			act.clickAndHold(source).moveToElement(target).build().perform();
+			Reports.reportStep("PASS", "Element has click and holded from "+source+" to "+target+" successfully");
+		} catch (Exception ex) {
+			Reports.reportStep("FAIL", "Problem while click and holding the element from "+source+" to "+target);
+			ex.printStackTrace();
 		}
-		return retVal;
 	}
 
-	public boolean verifySelected(WebElement ele) {
-		boolean retVal = false;
-		try {
-			if (ele.isSelected()) {
-				System.out.println("Pass : Element is Selected");
-				retVal = true;
-
-			} else {
-				System.out.println("Fail : Element is Selected");
-
-			}
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		return retVal;
-	}
 
 	// frame
 	public void framesByIndex(int index) {
 		try {
 			driver.switchTo().frame(index);
-
+			Reports.reportStep("PASS", "The frame is switched successfully using index number " +index);
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while switching the frame using index number "+index);
 			e.printStackTrace();
 		}
 	}
@@ -312,9 +292,9 @@ public class BaseTestEcom {
 	public void framesByWebElement(WebElement ele) {
 		try {
 			driver.switchTo().frame(ele);
-
+			Reports.reportStep("PASS", "The frame is swicthed successfully using WebElement " +ele);
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while switching the frame using WebElement "+ele);
 			e.printStackTrace();
 		}
 	}
@@ -322,9 +302,9 @@ public class BaseTestEcom {
 	public void framesByNameOrID(String nameOrID) {
 		try {
 			driver.switchTo().frame(nameOrID);
-
+			Reports.reportStep("PASS", "The frame is swicthed successfully using Name Or ID Attributes " +nameOrID);
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while switching the frame using NameOrId Attributes "+nameOrID);
 			e.printStackTrace();
 		}
 	}
@@ -332,58 +312,24 @@ public class BaseTestEcom {
 	public void framesByDefault() {
 		try {
 			driver.switchTo().defaultContent();
-
+			Reports.reportStep("PASS", "The frame is swicthed to parent frame successfully");
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while switching the parent frame ");
 			e.printStackTrace();
 		}
 	}
 
-	// draganddrop
-	public void dragAndDrop(WebElement source, WebElement target) {
-		try {
-			Actions act = new Actions(driver);
-			act.dragAndDrop(source, target).build().perform();
-
-		} catch (Exception ex) {
-
-			ex.printStackTrace();
-		}
-	}
-
-	// doubleclick
-	public void doubeclick(WebElement ele) {
-		try {
-			Actions act = new Actions(driver);
-			act.doubleClick(ele).build().perform();
-
-		} catch (Exception ex) {
-
-			ex.printStackTrace();
-		}
-	}
-
-	// clickAndHold
-	public void clickandHold(WebElement source, WebElement target) {
-		try {
-			Actions act = new Actions(driver);
-			act.clickAndHold(source).moveToElement(target).build().perform();
-
-		} catch (Exception ex) {
-
-			ex.printStackTrace();
-		}
-	}
 
 	// javasscriptexecutor
+	
 	public void jsScrollUpDrown(int x) {
 		try {
 
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(0," + x + ")");
-
+			Reports.reportStep("PASS", "Scroll action(up/down) has been done successfully "+x);
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while doing Scroll action(up/down) "+x);
 			ex.printStackTrace();
 		}
 	}
@@ -393,9 +339,9 @@ public class BaseTestEcom {
 
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(" + y + ",0)");
-
+			Reports.reportStep("PASS", "Scroll action has been done successfully upto finding that "+y);
 		} catch (Exception ex) {
-
+			Reports.reportStep("FAIL", "Problem while doing Scroll action upto find that "+y);
 			ex.printStackTrace();
 		}
 	}
@@ -404,9 +350,9 @@ public class BaseTestEcom {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView(true);", ele);
-
+			Reports.reportStep("PASS", "Scroll action has been done successfully upto finding that "+ele);
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while doing Scroll action upto find that "+ele);
 			e.printStackTrace();
 		}
 	}
@@ -415,9 +361,9 @@ public class BaseTestEcom {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].click()", ele);
-
+			Reports.reportStep("PASS", "The "+ele+" was clicked succesfully");
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "The "+ele+" wasn't clicked succesfully");
 			e.printStackTrace();
 		}
 	}
@@ -426,9 +372,9 @@ public class BaseTestEcom {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			System.out.println(js.executeScript("return document.title").toString());
-
+			Reports.reportStep("PASS", "The title has been taken successfully");
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while taking the title");
 			e.printStackTrace();
 		}
 
@@ -441,15 +387,16 @@ public class BaseTestEcom {
 			File source = ts.getScreenshotAs(OutputType.FILE);
 			File destination = new File("./ScreenShots/" + Sname + ".png");
 			FileUtils.copyFile(source, destination);
-
+			Reports.reportStep("PASS", "The ScreenShot has been done successfully");
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while taking the ScreenShot ");
 			e.printStackTrace();
 
 		}
 	}
 
 	// windowhandling
+	
 	public void windowHandlingOperation() {
 		try {
 			String pWindow = driver.getWindowHandle();
@@ -461,41 +408,13 @@ public class BaseTestEcom {
 					driver.switchTo().window(adr);
 				}
 				System.out.println(adr);
-
+				Reports.reportStep("PASS", "The window has been handled successfully");
 			}
 
 		} catch (Exception e) {
-
+			Reports.reportStep("FAIL", "Problem while handling the window");
 			e.printStackTrace();
 		}
-	}
-
-	// fileupload using Sendkeys
-
-	public void fileUploadSendKeys(WebElement ele, String path) {
-		try {
-			ele.sendKeys(path);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	// fileupload another method
-	public void fileAndClickUsingSikuli(String fileName) {
-		try {
-			String sourcePath = "D:\\POMUIFramework\\sikuliimages\\";
-			Screen screen = new Screen();
-
-			Pattern p1 = new Pattern(sourcePath + fileName);
-			screen.find(p1);
-			screen.click(p1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 }

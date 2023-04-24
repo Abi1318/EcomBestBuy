@@ -3,11 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="project.BottomLink">
+      <class name="com.BestBuy.Tests.BottomLinkTest">
         <methods>
-          <include name="findBottomLink"/>
+          <include name="signIn"/>
         </methods>
-      </class> <!-- project.BottomLink -->
+      </class> <!-- com.BestBuy.Tests.BottomLinkTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

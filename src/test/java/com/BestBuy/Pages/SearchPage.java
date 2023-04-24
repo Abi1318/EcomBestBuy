@@ -8,7 +8,7 @@ import com.BestBuy.Utils.BaseTestEcom;
 public class SearchPage extends BaseTestEcom {
 	@FindBy(linkText= "United States")
 	WebElement US;
-	public void clickUS() {
+	public void clickUSlogin() {
 		waitForElement(US);
 		clickAction(US);
 	}
@@ -19,6 +19,12 @@ public class SearchPage extends BaseTestEcom {
 		waitForElement(searchBox);
 		typeText(searchBox, searchText);
 	}
+	@FindBy(xpath="(//button[@type='submit'])[1]")
+	WebElement enter;
+	public void clickSearchBox() {
+		waitForElement(enter);
+		clickAction(enter);
+	}
 	
 	@FindBy(linkText="LEGO - Disney Twirling Rapunzel 43214")
 	WebElement toy;
@@ -27,12 +33,6 @@ public class SearchPage extends BaseTestEcom {
 		clickAction(toy);
 	}
 	
-	@FindBy(xpath="(//button[@type='submit'])[1]")
-	WebElement enter;
-	public void clickSearchBox() {
-		waitForElement(enter);
-		clickAction(enter);
-	}
 	
 	@FindBy(xpath="(//button[text()='Add to Cart'])[1]")
 	WebElement Cart;
